@@ -2,7 +2,6 @@ package com.soulwave.soulwaveapp.dao;
 
 import com.soulwave.soulwaveapp.models.Usuario;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
@@ -16,6 +15,7 @@ public class UsuarioDaoImp implements UsuarioDao {
     EntityManager entityManager;
 
     @Override
+    @Transactional
     public List<Usuario> getUsuarios() {
         String query = "FROM Usuario";
         return entityManager.createQuery(query).getResultList();

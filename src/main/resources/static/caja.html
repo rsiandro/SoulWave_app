@@ -11,19 +11,51 @@
 
     <title>Soulwave App - Caja</title>
 
+    <!-- Script para el botón imprimir -->
+    <script language="Javascript">
+    function imprimirSeleccion(nombre) {
+    var ficha = document.getElementById(nombre);
+    var ventimp = window.open(' ', 'popimpr');
+    ventimp.document.write( ficha.innerHTML );
+    ventimp.document.close();
+    ventimp.print( );
+    ventimp.close();
+    }
+    </script>
+
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts -->
+    <script src="js/sb-admin-2.min.js"></script>
+    <script src="js/movimiento.js"></script>
+    <script src="js/balance.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/chart-area-demo.js"></script>
+    <script src="js/demo/chart-pie-demo.js"></script>
+
     <!-- Datepicker stylesheet -->
-    <!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
     <link href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 
     <!-- Datepicker script -->
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
-    <script src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+    <script src="js/moment.js"></script>
+    <script src="js/bootstrap-datetimepicker.js"></script>
+
+    <!-- DataTable stylesheet and script -->
+    <link rel="stylesheet" type="text/css" href="css/dataTables.css">
+    <script type="text/javascript" charset="utf8" src="js/dataTables.js"></script>
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -106,7 +138,7 @@
                             <span class="mr-2 d-none d-lg-inline text-gray-1000 small" id="txt-usuario">...</span>
                             <span class="mr-2 d-none d-lg-inline text-gray-1000 small" > </span>
                             <img class="img-profile rounded-circle"
-                                 src="img/undraw_profile.svg"
+                                 src="img/undraw_profile.svg">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -142,7 +174,7 @@
                             <!-- Card Content - Collapse -->
                             <div class="collapse" id="collapseCardMovimientos">
                                 <div class="card-body">
-                                    <h6 class="m-2 font-weight-normal text-primary">Seleccione un rango de fechas</h6> </div>
+                                    <h6 class="m-2 font-weight-bold text-primary">Seleccione un rango de fechas</h6>
                                     <!-- Start of Datepicker -->
                                     <div class="container px-1 px-sm5 mx-auto">
                                         <div class='col-sm-12'>
@@ -150,8 +182,8 @@
                                                 <div class="flex-row d-flex justify-content-center">
                                                     <div class='input-group date' id='datetimepicker1'>
                                                         <div class="form-group">
-                                                            <label id="start-p" for="start-p">Desde:</label>
-                                                            <input type='date' class="form-control" />
+                                                            <label id="start-movp" for="start-movp">Desde:</label>
+                                                            <input type='date' class="form-control" id="fechainiciomov" />
                                                             <span class="input-group-addon">
                                                             <span class="glyphicon glyphicon-calendar"></span>
                                                             </span>
@@ -159,8 +191,8 @@
                                                     </div>
                                                     <div class='input-group date' id='datetimepicker2'>
                                                         <div class="form-group">
-                                                            <label id="end-p" for="end-p">Hasta:</label>
-                                                            <input type='date' class="form-control" />
+                                                            <label id="end-movp" for="end-movp">Hasta:</label>
+                                                            <input type='date' class="form-control" id="fechafinmov" />
                                                             <span class="input-group-addon">
                                                             <span class="glyphicon glyphicon-calendar"></span>
                                                             </span>
@@ -171,9 +203,55 @@
                                         </div>
                                     </div>
                                     <!-- End of DatePicker -->
+                                    <div>
+                                        <a onclick="consultarMovimientos()" href="#" class="btn btn-facebook btn-block" >MOSTRAR</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin de la tarjeta MOVIMIENTOS -->
+
+                        <!-- Tarjeta BALANCE -->
+                        <div class="card shadow mb-4">
+                            <a href="#collapseCardBalance" class="d-block card-header py-3" data-toggle="collapse"
+                               role="button" aria-expanded="true" aria-controls="collapseCardBalance">
+                                <h6 class="m-0 font-weight-bold text-primary">Balance</h6>
+                            </a>
+                            <!-- Card Content - Collapse -->
+                            <div class="collapse" id="collapseCardBalance">
                                 <div class="card-body">
-                                    <h6 class="m-2 font-weight-normal text-primary">Seleccione las categorías a mostrar</h6>
-                                    <br>
+                                    <h6 class="m-2 font-weight-bold text-primary">Seleccione un rango de fechas</h6>
+                                </div>
+                                <!-- Start of Datepicker -->
+                                <div class="container px-1 px-sm5 mx-auto">
+                                    <div class='col-sm-12'>
+                                        <div class="form-group">
+                                            <div class="flex-row d-flex justify-content-center">
+                                                <div class='input-group date' id='datetimepicker3'>
+                                                    <div class="form-group">
+                                                        <label id="start-balp" for="start-balp">Desde:</label>
+                                                        <input type='date' class="form-control" id="fechainiciobal" />
+                                                        <span class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+                                                                </span>
+                                                    </div>
+                                                </div>
+                                                <div class='input-group date' id='datetimepicker4'>
+                                                    <div class="form-group">
+                                                        <label id="end-balp" for="end-balp">Hasta:</label>
+                                                        <input type='date' class="form-control" id="fechafinbal" />
+                                                        <span class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+                                                                </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End of DatePicker -->
+                                <div class="card-body">
+                                    <h6 class="m-2 font-weight-bold text-primary">Seleccione las categorías a mostrar</h6>
                                     <div class="container px-1 px-sm5 mx-auto">
                                         <div class="row">
                                             <div class='col-sm'>
@@ -238,58 +316,15 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <a href="#" class="btn btn-facebook btn-block">MOSTRAR</a>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Fin de la tarjeta MOVIMIENTOS -->
-
-                        <!-- Tarjeta BALANCE -->
-                        <div class="card shadow mb-4">
-                            <a href="#collapseCardBalance" class="d-block card-header py-3" data-toggle="collapse"
-                               role="button" aria-expanded="true" aria-controls="collapseCardBalance">
-                                <h6 class="m-0 font-weight-bold text-primary">Balance</h6>
-                            </a>
-                            <!-- Card Content - Collapse -->
-                            <div class="collapse" id="collapseCardBalance">
-                                <div class="card-body">
-                                    <h6 class="m-2 font-weight-normal text-primary">Seleccione un rango de fechas</h6> </div>
-                                <!-- Start of Datepicker -->
-                                <div class="container px-1 px-sm5 mx-auto">
-                                    <div class='col-sm-12'>
-                                        <div class="form-group">
-                                            <div class="flex-row d-flex justify-content-center">
-                                                <div class='input-group date' id='datetimepicker3'>
-                                                    <div class="form-group">
-                                                        <label id="start-p" for="start-p">Desde:</label>
-                                                        <input type='date' class="form-control" />
-                                                        <span class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-calendar"></span>
-                                                                </span>
-                                                    </div>
-                                                </div>
-                                                <div class='input-group date' id='datetimepicker2'>
-                                                    <div class="form-group">
-                                                        <label id="end-p" for="end-p">Hasta:</label>
-                                                        <input type='date' class="form-control" />
-                                                        <span class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-calendar"></span>
-                                                                </span>
-                                                    </div>
+                                        <div class="card-body">
+                                            <div class="container px-1 px-sm5 mx-auto">
+                                                <div class="row">
+                                                    <a onclick="consultarMovimientosBalance()" href="#" class="btn btn-facebook btn-block">CALCULAR</a>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <!-- End of DatePicker -->
-                                <div class="card-body">
-                                    <div class="container px-1 px-sm5 mx-auto">
-                                        <div class="row">
-                                            <a href="#" class="btn btn-facebook btn-block">CALCULAR</a>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -298,7 +333,7 @@
             </div>
             <!-- /.container-fluid -->
         </div>
-        <!-- End of Main Content -->
+            <!-- End of Main Content -->
 
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
@@ -331,7 +366,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">A continuación seleccioná "Cerrar sesión" si estás listo para finalizar la sesión actual.</div>
+            <div class="modal-body">A continuación, seleccione "Cerrar sesión" si está listo para finalizar la sesión actual.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                 <a class="btn btn-primary" href="login.html">Cerrar Sesión</a>
@@ -340,31 +375,94 @@
     </div>
 </div>
 
-<!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Modal de MOVIMIENTOS-->
+<div class="modal fade" id="movimientosModal" tabindex="-1" role="dialog" aria-labelledby="movimientosModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="movimientosModalLabel">Movimientos</h5>
+            </div>
+            <!-- Tabla MOVIMIENTOS -->
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="tablaMovimientos" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Fecha y hora</th>
+                                        <th>Tipo</th>
+                                        <th>Usuario</th>
+                                        <th>Cliente</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
 
-<!-- Core plugin JavaScript-->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-secondary" href="caja.html">Volver</a>
+                <a class="btn btn-primary" href="javascript:imprimirSeleccion('movimientosModal')">Imprimir</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-<!-- Custom scripts for all pages-->
-<script src="js/sb-admin-2.min.js"></script>
+<!-- Modal de BALANCE-->
+<div class="modal fade" id="balanceModal" tabindex="-1" role="dialog" aria-labelledby="balanceModalLabel" aria-hidden="true"data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="balanceModalLabel">Balance</h5>
+            </div>
+            <!-- Tabla BALANCE -->
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="tablaBalance" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Fecha y hora</th>
+                                        <th>Descripción</th>
+                                        <th>Medio</th>
+                                        <th>Tipo</th>
+                                        <th>Valor</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
 
-<!-- Page level plugins -->
-<script src="vendor/chart.js/Chart.min.js"></script>
+                                    </tbody>
+                                </table>
+                                <table class="table" id="tablaTotalBal" width="100%" cellspacing="0">
+                                    <tbody>
 
-<!-- Page level custom scripts -->
-<script src="js/demo/chart-area-demo.js"></script>
-<script src="js/demo/chart-pie-demo.js"></script>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Volver</button>
+                <a class="btn btn-primary" href="javascript:imprimirSeleccion('balanceModal')">Imprimir</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <!-- DatePicker Script -->
-    <script type="text/javascript">
-    $(function() {
-        $('#datetimepicker1').datetimepicker();
-    });
-</script>
-    <!-- End of Datepicker Script -->
-
+<!-- Script para los datetimepickers -->
+<script src="js/dateTimePickers.js"></script>
 
 </body>
 

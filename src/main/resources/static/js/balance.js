@@ -50,12 +50,19 @@ async function consultarMovimientosBalance() {
     }
   }
 
-   total = movimientoIngresoSuma - movimientoEgresoResta;
+   total = movimientoIngresoSuma + movimientoEgresoResta;
+
+   console.log(movimientoIngresoSuma);
+   console.log(movimientoEgresoResta);
+   console.log(total);
 
   document.querySelector('#tablaBalance tbody').outerHTML = listadoHtml;
 
+  if(movimientoIngresoSuma >= 1){
   document.querySelector('#tablaTotalBal tbody').outerHTML = '<td class = "h3 m-3 font-weight-normal"></td><td class = "h3 m-3 font-weight-normal"></td><td class = "h3 m-3 font-weight-normal text-right">Total</td><td class = "h3 m-3 font-weight-normal text-right">$</td><td class = "h3 m-3 font-weight-normal">'+ total +'</td>';
-
+  } else {
+  document.querySelector('#tablaTotalBal tbody').outerHTML = '<td class = "h3 m-3 font-weight-normal"></td><td class = "h3 m-3 font-weight-normal"></td><td class = "h3 m-3 font-weight-normal text-right">Total</td><td class = "h3 m-3 font-weight-normal text-right">$</td><td class = "h3 m-3 font-weight-normal"> - '+ total +'</td>';
+  }
       $("#balanceModal").modal("show");
 
   let table = new DataTable('#tablaBalance', {});

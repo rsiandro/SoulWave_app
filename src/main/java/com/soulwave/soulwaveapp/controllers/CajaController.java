@@ -1,5 +1,4 @@
 package com.soulwave.soulwaveapp.controllers;
-
 import com.soulwave.soulwaveapp.dao.CajaDao;
 import com.soulwave.soulwaveapp.models.Movimiento;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -15,6 +15,11 @@ async function consultarMovimientosBalance() {
   let egIVA = document.getElementById('egIVA').checked;
   let egDepositos = document.getElementById('egDepositos').checked;
 
+  if (fechainiciobal == "" || fechafinbal == ""){
+          alert ("Debe ingresar un rango de fechas.");
+          window.location.href = 'caja.html'
+      }
+
   const url = 'api/balance?'+ $.param({fechainiciobal,fechafinbal,inEfectivo,inTarjeta,inTransferencia,inMercadoPago,egEfectivo,egCheques,egTransferencia,egIVA,egDepositos});
 
   const request = await fetch (url,{

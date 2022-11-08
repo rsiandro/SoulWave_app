@@ -1,9 +1,11 @@
 package com.soulwave.soulwaveapp.dao;
 import com.soulwave.soulwaveapp.models.Movimiento;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
+
+
 import java.util.List;
 
 @Repository
@@ -16,9 +18,9 @@ public class CajaDaoImp implements CajaDao {
     @Transactional
     public List<Movimiento> getMovimientos(String fechainicio, String fechafin) {
 
-        String query1 = "FROM Movimiento WHERE fechayhora between '";
+        String query1 = "FROM Movimiento WHERE (fechayhora between '";
         String query2 = "' AND '";
-        String query3 = "'";
+        String query3 = "') AND tipo != 'stock'";
         String query = query1+fechainicio+" 00:00"+query2+fechafin+" 23:59"+query3;
 
         return entityManagerMov.createQuery(query).getResultList();
@@ -27,6 +29,7 @@ public class CajaDaoImp implements CajaDao {
 
     @PersistenceContext
     EntityManager entityManagerBal;
+    @Override
     @Transactional
     public List<Movimiento> getMovimientosBal(String fechainiciobal, String fechafinbal, boolean inEfectivo,
                                               boolean inTarjeta, boolean inTransferencia, boolean inMercadoPago,
@@ -92,74 +95,51 @@ public class CajaDaoImp implements CajaDao {
         String queryMedio = ""; // Variable string para la tercera parte de la query
         String inEfectivoMedio, inTarjetaMedio, inTransferenciaMedio, inMPMedio, egEfectivoMedio,
                 egChequesMedio, egTransferenciaMedio, egIVAMedio, egDepositosMedio;
+        String oR;
+        int k =0;
 
-        if (inEfectivo) {
-            inEfectivoMedio = "id_med = '1'";
-                queryMedio = inEfectivoMedio;
+        if (inEfectivo) {inEfectivoMedio = "id_med = '1'";k++;
+            queryMedio = inEfectivoMedio;
         }
-        if (inTarjeta) {
-            inTarjetaMedio = "id_med = '2'";
-            if (contTrue >= 2) {
-                queryMedio = queryMedio + " OR " + inTarjetaMedio;
-            } else {
-                queryMedio = inTarjetaMedio;
-            }
+        if (inTarjeta) {inTarjetaMedio = "id_med = '2'"; k++;
+            if (k >= 2){oR = " OR ";}
+            else {oR = "";}
+            queryMedio = queryMedio + oR + inTarjetaMedio;
         }
-        if (inTransferencia) {
-            inTransferenciaMedio = "id_med = '4'";
-            if (contTrue >= 2) {
-                queryMedio = queryMedio + " OR " + inTransferenciaMedio;
-            } else {
-                queryMedio = inTransferenciaMedio;
-            }
+        if (inTransferencia) {inTransferenciaMedio = "id_med = '4'"; k++;
+            if (k >= 2) {oR = " OR ";}
+            else {oR = "";}
+            queryMedio = queryMedio + oR + inTransferenciaMedio;
         }
-        if (inMercadoPago){
-            inMPMedio = "id_med = '6'";
-            if (contTrue >= 2) {
-                queryMedio = queryMedio + " OR " + inMPMedio;
-            } else {
-                queryMedio = inMPMedio;
-            }
+        if (inMercadoPago){inMPMedio = "id_med = '6'"; k++;
+            if (k >= 2) {oR = " OR ";}
+            else {oR = "";}
+            queryMedio = queryMedio + oR + inMPMedio;
         }
-        if (egEfectivo){
-            egEfectivoMedio = "id_med = '1'";
-            if (contTrue >= 2) {
-                queryMedio = queryMedio + " OR " + egEfectivoMedio;
-            } else {
-                queryMedio = egEfectivoMedio;
-            }
+        if (egEfectivo){egEfectivoMedio = "id_med = '1'"; k++;
+            if (k >= 2) {oR = " OR ";}
+            else {oR = "";}
+            queryMedio = queryMedio + oR + egEfectivoMedio;
         }
-        if (egCheques){
-            egChequesMedio = "id_med = '7'";
-            if (contTrue >= 2) {
-                queryMedio = queryMedio + " OR " + egChequesMedio;
-            } else {
-                queryMedio = egChequesMedio;
-            }
+        if (egCheques){egChequesMedio = "id_med = '7'"; k++;
+            if (k >= 2) {oR = " OR ";}
+            else {oR = "";}
+            queryMedio = queryMedio + oR + egChequesMedio;
         }
-        if (egTransferencia){
-            egTransferenciaMedio = "id_med = '4'";
-            if (contTrue >= 2) {
-                queryMedio = queryMedio + " OR " + egTransferenciaMedio;
-            } else {
-                queryMedio = egTransferenciaMedio;
-            }
+        if (egTransferencia){egTransferenciaMedio = "id_med = '4'"; k++;
+            if (k >= 2) {oR = " OR ";}
+            else {oR = "";}
+            queryMedio = queryMedio + oR + egTransferenciaMedio;
         }
-        if (egIVA){
-            egIVAMedio = "id_med = '8'";
-            if (contTrue >= 2) {
-                queryMedio = queryMedio + " OR " + egIVAMedio;
-            } else {
-                queryMedio = egIVAMedio;
-            }
+        if (egIVA){egIVAMedio = "id_med = '8'"; k++;
+            if (k >= 2) {oR = " OR ";}
+            else {oR = "";}
+            queryMedio = queryMedio + oR + egIVAMedio;
         }
-        if (egDepositos){
-            egDepositosMedio = "id_med = '9'";
-            if (contTrue >= 2) {
-                queryMedio = queryMedio + " OR " + egDepositosMedio;
-            } else {
-                queryMedio = egDepositosMedio;
-            }
+        if (egDepositos){egDepositosMedio = "id_med = '9'"; k++;
+            if (k >= 2) {oR = " OR ";}
+            else {oR = "";}
+            queryMedio = queryMedio + oR + egDepositosMedio;
         }
 
         queryMedio = "(" + queryMedio + ")";
@@ -168,7 +148,10 @@ public class CajaDaoImp implements CajaDao {
         String and = "";
 
         if (contTrue >= 1) {
-            and = " AND ";
+            and = " AND ";}
+        else {
+            queryTipo = "";
+            queryMedio = "";
         }
 
         String query = queryFecha + and + queryTipo + and + queryMedio;

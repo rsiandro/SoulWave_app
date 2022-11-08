@@ -4,6 +4,11 @@ async function consultarMovimientos() {
   let fechainiciomov = document.getElementById('fechainiciomov').value ;
   let fechafinmov = document.getElementById('fechafinmov').value;
 
+  if (fechainiciomov == "" || fechafinmov == ""){
+          alert ("Debe ingresar un rango de fechas.");
+          window.location.href = 'caja.html'
+      }
+
   const url = 'api/movimientos?'+ $.param({fechainiciomov,fechafinmov});
 
   const request = await fetch (url,{
@@ -20,7 +25,7 @@ async function consultarMovimientos() {
 
     let clearFechayhora = movimiento.fechayhora.replace('T','@');
 
-    let movimientoHtml = '<tr><td>'+ movimiento.id_mov +'</td><td>'+ clearFechayhora +'</td><td>'+ movimiento.tipo +'</td><td>'+ movimiento.id_usr +'</td><td>'+ movimiento.id_cliente +'</td></tr>';
+    let movimientoHtml = '<tr><td>'+ movimiento.id_mov +'</td><td>'+ clearFechayhora +'</td><td>'+ movimiento.tipo +'</td><td>'+ movimiento.nombre +'</td><td>'+ movimiento.id_usr +'</td><td>'+ movimiento.id_cliente +'</td></tr>';
 
     listadoHtml += movimientoHtml;
 
